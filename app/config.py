@@ -30,3 +30,18 @@ class AuthConfig:
     def __post_init__(self):
         if self.secret_key is None:
             self.secret_key = os.getenv("JWT_SECRET_KEY", "change-me-in-production")
+
+
+@dataclass
+class CORSConfig:
+    """CORS configuration."""
+
+    dev_mode: bool = None
+    allowed_origins: list[str] = None
+
+    def __post_init__(self):
+        if self.dev_mode is None:
+            self.dev_mode = os.getenv("DEV_MODE", "true").lower() == "true"
+        if self.allowed_origins is None:
+            origins = os.getenv("ALLOWED_ORIGINS", "")
+            self.allowed_origins = [o.strip() for o in origins.split(",") if o.strip()]
